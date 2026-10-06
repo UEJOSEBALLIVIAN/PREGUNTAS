@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Interactivo de Álgebra - 1° de Secundaria</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para Íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- MathJax para visualización matemática impecable -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mathNavy: '#0F172A',
+                        mathBlue: '#1E40AF',
+                        mathBrightBlue: '#2563EB',
+                        mathLightBlue: '#EFF6FF',
+                        mathYellow: '#F59E0B',
+                        mathGold: '#FBBF24',
+                        mathLightYellow: '#FEF3C7',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        math: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b1329;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(30, 64, 175, 0.25) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.8) 0px, transparent 100%);
+            background-attachment: fixed;
+        }
+
+        .math-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='10' y='30' fill='%232563EB' opacity='0.07' font-family='sans-serif' font-size='20' font-weight='bold'%3Ex%2B2%3C/text%3E%3Ctext x='60' y='70' fill='%23F59E0B' opacity='0.07' font-family='sans-serif' font-size='22' font-weight='bold'%3E%26%238747%3B%3C/text%3E%3Ctext x='50' y='25' fill='%233B82F6' opacity='0.07' font-family='sans-serif' font-size='18'%3E%26%238730%3Bx%3C/text%3E%3Ctext x='15' y='80' fill='%23FBBF24' opacity='0.07' font-family='sans-serif' font-size='18'%3E3a%25C2%25B2%3C/text%3E%3C/svg%3E");
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .option-card {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .option-card:hover:not(.disabled) {
+            transform: translateY(-2px);
+            border-color: #2563EB;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .pulse-gold {
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans text-slate-800 math-pattern flex flex-col justify-between p-3 sm:p-6">
+
+    <header class="max-w-4xl mx-auto w-full mb-4">
+        <div class="bg-gradient-to-r from-mathBlue via-mathBrightBlue to-blue-900 rounded-2xl p-4 sm:p-6 text-white shadow-xl border-b-4 border-mathYellow flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 sm:w-14 sm:h-14 bg-mathYellow text-mathNavy rounded-2xl flex items-center justify-center font-math font-extrabold text-2xl shadow-lg transform -rotate-3">
+                    <i class="fa-solid font-mono text-2xl">x²</i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight">U.E. JOSÉ BALLIVIAN</h1>
+                    <p class="text-blue-200 text-xs sm:text-sm font-medium">1° de Secundaria • Módulo Interactivo con Retroalimentación</p>
+                </div>
+            </div>
+            <div id="badgeRonda" class="hidden sm:flex items-center bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 text-xs font-semibold text-mathGold">
+                <i class="fa-solid fa-arrows-rotate mr-2"></i> <span id="rondaTexto">Ronda Inicial</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto w-full flex-grow flex flex-col justify-center">
+
+        <!-- PANTALLA 1: Inicio / Instrucciones -->
+        <section id="screenStart" class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl text-center border-t-8 border-mathBlue">
+            <div class="w-20 h-20 bg-mathLightBlue text-mathBrightBlue rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner border-2 border-blue-200">
+                <i class="fa-solid fa-calculator"></i>
+            </div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-mathNavy mb-3">¡Aprende y Evalúa tu Álgebra!</h2>
+            <p class="text-slate-600 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+                Responde las preguntas de primer año de secundaria. <strong class="text-mathBlue">Obtendrás retroalimentación inmediata en cada pregunta</strong> indicando la solución correcta y el procedimiento. Las preguntas que falles se repetirán en rondas posteriores hasta lograr el 100% de dominio.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-8 text-left">
+                <div class="bg-blue-50/70 p-4 rounded-2xl border border-blue-100 flex items-start space-x-3">
+                    <i class="fa-solid fa-circle-check text-mathBrightBlue mt-1 text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-mathBlue">Retroalimentación</h4>
+                        <p class="text-slate-600 text-xs">Ves la respuesta correcta al instante</p>
+                    </div>
+                </div>
+                <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-100 flex items-start space-x-3">
+                    <i class="fa-solid fa-rotate-right text-mathYellow mt-1 text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-amber-700">Refuerzo</h4>
+                        <p class="text-slate-600 text-xs">Repites solo las que fallaste</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-100 flex items-start space-x-3">
+                    <i class="fa-solid fa-award text-emerald-600 mt-1 text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-xs uppercase text-emerald-800">Objetivo</h4>
+                        <p class="text-slate-600 text-xs">Lograr el 100% de efectividad</p>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="startExam()" class="bg-gradient-to-r from-mathYellow to-mathGold hover:from-amber-500 hover:to-mathYellow text-mathNavy font-extrabold text-lg px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1 active:translate-y-0 pulse-gold w-full sm:w-auto">
+                <i class="fa-solid fa-play mr-2"></i> Comenzar Examen
+            </button>
+        </section>
+
+        <!-- PANTALLA 2: Examen Activo -->
+        <section id="screenQuiz" class="hidden glass-card rounded-3xl p-5 sm:p-8 shadow-2xl relative border-t-8 border-mathBrightBlue">
+            
+            <!-- Barra Superior de Progreso -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-extrabold uppercase tracking-wider text-mathBrightBlue bg-mathLightBlue px-3 py-1 rounded-lg border border-blue-200">
+                        Pregunta <span id="currentQNum">1</span> de <span id="totalQNum">10</span>
+                    </span>
+                    <span id="roundIndicator" class="text-xs font-bold text-amber-700 bg-mathLightYellow px-3 py-1 rounded-lg border border-amber-200">
+                        Ronda 1
+                    </span>
+                </div>
+                <!-- Track de la barra -->
+                <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden p-0.5">
+                    <div id="progressBar" class="bg-gradient-to-r from-mathBrightBlue to-mathYellow h-full rounded-full transition-all duration-500" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <!-- Caja de la Pregunta -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 sm:p-6 mb-5 shadow-sm">
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1" id="topicBadge">Álgebra Básico</div>
+                <h3 id="questionText" class="text-lg sm:text-xl font-bold text-mathNavy leading-relaxed">
+                    Cargando pregunta...
+                </h3>
+            </div>
+
+            <!-- Opciones de Respuesta -->
+            <div id="optionsContainer" class="grid grid-cols-1 gap-3.5 mb-5">
+                <!-- Se generan dinámicamente -->
+            </div>
+
+            <!-- Caja Explicativa de Retroalimentación (Oculta por defecto) -->
+            <div id="explanationBox" class="hidden rounded-2xl p-4 mb-5 border transition-all duration-300">
+                <div class="flex items-start space-x-3">
+                    <div id="explanationIcon" class="text-xl mt-0.5"></div>
+                    <div>
+                        <h4 id="explanationTitle" class="font-extrabold text-sm uppercase mb-1">Explicación</h4>
+                        <p id="explanationText" class="text-sm leading-relaxed"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Acción / Navegación -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-2 border-t border-slate-200">
+                <div id="hintText" class="text-xs text-slate-500 font-medium text-center sm:text-left">
+                    <i class="fa-solid fa-hand-pointer text-mathBrightBlue mr-1"></i> Selecciona la respuesta que consideres correcta.
+                </div>
+                <button id="btnNext" onclick="nextQuestion()" class="hidden w-full sm:w-auto bg-mathBrightBlue hover:bg-mathBlue text-white font-bold px-7 py-3 rounded-xl shadow-lg transition flex items-center justify-center">
+                    Siguiente Pregunta <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- PANTALLA 3: Resultados de la Ronda -->
+        <section id="screenResults" class="hidden glass-card rounded-3xl p-6 sm:p-10 shadow-2xl text-center border-t-8 border-mathYellow">
+            
+            <div id="resultIconContainer" class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl">
+                <!-- Dinámico -->
+            </div>
+
+            <h2 id="resultTitle" class="text-2xl sm:text-3xl font-extrabold text-mathNavy mb-1">¡Ronda Completada!</h2>
+            <p id="resultSubtitle" class="text-slate-600 text-sm mb-6">Aquí tienes el resumen de tu desempeño:</p>
+
+            <!-- Cuadrícula de Métricas -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto mb-6">
+                <div class="bg-blue-50/80 p-3 sm:p-4 rounded-2xl border border-blue-200">
+                    <div class="text-xs font-bold text-mathBlue uppercase">Calificación</div>
+                    <div id="scoreScore" class="text-2xl sm:text-3xl font-extrabold text-mathNavy mt-1">0/100</div>
+                </div>
+                <div class="bg-emerald-50/80 p-3 sm:p-4 rounded-2xl border border-emerald-200">
+                    <div class="text-xs font-bold text-emerald-700 uppercase">Aciertos</div>
+                    <div id="scoreCorrect" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 mt-1">0</div>
+                </div>
+                <div class="bg-rose-50/80 p-3 sm:p-4 rounded-2xl border border-rose-200">
+                    <div class="text-xs font-bold text-rose-700 uppercase">Incorrectas</div>
+                    <div id="scoreWrong" class="text-2xl sm:text-3xl font-extrabold text-rose-600 mt-1">0</div>
+                </div>
+                <div class="bg-amber-50/80 p-3 sm:p-4 rounded-2xl border border-amber-200">
+                    <div class="text-xs font-bold text-amber-700 uppercase">Efectividad</div>
+                    <div id="scorePercent" class="text-2xl sm:text-3xl font-extrabold text-amber-600 mt-1">0%</div>
+                </div>
+            </div>
+
+            <!-- Mensaje Motivado -->
+            <div id="feedbackBox" class="p-4 rounded-2xl text-sm sm:text-base font-medium max-w-2xl mx-auto mb-6 border">
+                <!-- Dinámico -->
+            </div>
+
+            <!-- Botones de Acción Post-Resultado -->
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button id="btnRepeatErrors" onclick="startRetryRound()" class="hidden w-full sm:w-auto bg-gradient-to-r from-mathYellow to-mathGold hover:from-amber-500 hover:to-mathYellow text-mathNavy font-extrabold text-base px-6 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-rotate-right mr-2"></i> Repetir Preguntas Falladas (<span id="wrongCountBtn">0</span>)
+                </button>
+                
+                <button id="btnRestartAll" onclick="resetExamCompletely()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white font-bold text-base px-6 py-3.5 rounded-xl shadow-md transition">
+                    <i class="fa-solid fa-power-off mr-2"></i> Reiniciar Todo el Examen
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="max-w-4xl mx-auto w-full mt-6 text-center text-xs text-slate-400">
+        <p>Sistema Evaluativo de Álgebra con Retroalimentación Instantánea • 1° Año de Secundaria</p>
+    </footer>
+
+    <script>
+        // Banco de Preguntas Completo con Solución/Explicación detallada
+        const masterQuestions = [
+            {
+                id: 1,
+                topic: "Términos Semejantes",
+                question: "Simplifica la siguiente expresión reduciendo términos semejantes: 5x + 3y - 2x + 4y",
+                options: [
+                    "7x + 7y",
+                    "3x + 7y",
+                    "3x + y",
+                    "8x - y"
+                ],
+                correct: 1,
+                explanation: "Agrupamos los términos semejantes: (5x - 2x) + (3y + 4y) = 3x + 7y."
+            },
+            {
+                id: 2,
+                topic: "Ecuaciones de 1° Grado",
+                question: "Encuentra el valor de 'x' en la ecuación: 2x + 6 = 14",
+                options: [
+                    "x = 3",
+                    "x = 5",
+                    "x = 4",
+                    "x = 10"
+                ],
+                correct: 2,
+                explanation: "Restamos 6 en ambos lados: 2x = 14 - 6  =>  2x = 8. Luego dividimos entre 2: x = 8 / 2 = 4."
+            },
+            {
+                id: 3,
+                topic: "Valor Numérico",
+                question: "Si a = 3 y b = 2, ¿cuál es el valor numérico de la expresión: 3a - 2b + 5?",
+                options: [
+                    "10",
+                    "8",
+                    "12",
+                    "14"
+                ],
+                correct: 0,
+                explanation: "Sustituimos los valores: 3(3) - 2(2) + 5 = 9 - 4 + 5 = 5 + 5 = 10."
+            },
+            {
+                id: 4,
+                topic: "Lenguaje Algebraico",
+                question: "¿Cómo se representa algebraicamente: 'El triple de un número aumentado en 8'?",
+                options: [
+                    "3(x + 8)",
+                    "x³ + 8",
+                    "3x + 8",
+                    "x/3 + 8"
+                ],
+                correct: 2,
+                explanation: "'El triple de un número' es 3x. 'Aumentado en 8' significa sumar 8. Por lo tanto, es 3x + 8."
+            },
+            {
+                id: 5,
+                topic: "Operaciones con Monomios",
+                question: "¿Cuál es el resultado de multiplicar los monomios: (4x²) · (3x³)?",
+                options: [
+                    "12x⁵",
+                    "7x⁵",
+                    "12x⁶",
+                    "7x⁶"
+                ],
+                correct: 0,
+                explanation: "Se multiplican los coeficientes (4 · 3 = 12) y se suman los exponentes de la misma base (2 + 3 = 5): 12x⁵."
+            },
+            {
+                id: 6,
+                topic: "Propiedad Distributiva",
+                question: "Aplica la propiedad distributiva para resolver: 4(2x - 5)",
+                options: [
+                    "8x - 5",
+                    "6x - 20",
+                    "8x - 20",
+                    "8x + 20"
+                ],
+                correct: 2,
+                explanation: "Multiplicamos 4 por cada término dentro del paréntesis: 4 · 2x = 8x y 4 · (-5) = -20. Resultado: 8x - 20."
+            },
+            {
+                id: 7,
+                topic: "Ecuaciones con Paréntesis",
+                question: "Resuelve la siguiente ecuación: 3(x - 2) = 9",
+                options: [
+                    "x = 3",
+                    "x = 5",
+                    "x = 1",
+                    "x = 4"
+                ],
+                correct: 1,
+                explanation: "Aplicamos distributiva: 3x - 6 = 9  =>  3x = 9 + 6  =>  3x = 15  =>  x = 15 / 3 = 5."
+            },
+            {
+                id: 8,
+                topic: "Grado de un Monomio",
+                question: "¿Cuál es el grado absoluto del monomio: -7x³y²?",
+                options: [
+                    "3",
+                    "2",
+                    "5",
+                    "6"
+                ],
+                correct: 2,
+                explanation: "El grado absoluto es la suma de los exponentes de sus variables: 3 (de x) + 2 (de y) = 5."
+            },
+            {
+                id: 9,
+                topic: "Resta de Polinomios",
+                question: "Resta los siguientes monomios: De 9a resta 12a",
+                options: [
+                    "3a",
+                    "-3a",
+                    "21a",
+                    "-21a"
+                ],
+                correct: 1,
+                explanation: "Escribimos la operación: 9a - 12a = (9 - 12)a = -3a."
+            },
+            {
+                id: 10,
+                topic: "Planteo de Problemas",
+                question: "La suma de tres números consecutivos es igual a 33. Si el menor es 'x', ¿cuál es la ecuación correcta?",
+                options: [
+                    "x + (x+1) + (x+2) = 33",
+                    "3x + 1 = 33",
+                    "x + x + x = 33",
+                    "x · (x+1) · (x+2) = 33"
+                ],
+                correct: 0,
+                explanation: "Los tres números consecutivos son x, (x+1) y (x+2). Al sumarlos e igualarlos a 33 obtenemos: x + (x+1) + (x+2) = 33."
+            }
+        ];
+
+        let activeQueue = [];         
+        let currentRound = 1;         
+        let currentIndex = 0;        
+        let answered = false;         
+        let roundAnswers = [];        
+        let failedQuestions = [];     
+
+        const screenStart = document.getElementById('screenStart');
+        const screenQuiz = document.getElementById('screenQuiz');
+        const screenResults = document.getElementById('screenResults');
+        const badgeRonda = document.getElementById('badgeRonda');
+        const rondaTexto = document.getElementById('rondaTexto');
+
+        function startExam() {
+            activeQueue = [...masterQuestions];
+            currentRound = 1;
+            failedQuestions = [];
+            
+            screenStart.classList.add('hidden');
+            screenResults.classList.add('hidden');
+            screenQuiz.classList.remove('hidden');
+            badgeRonda.classList.remove('hidden');
+            
+            setupRound();
+        }
+
+        function setupRound() {
+            currentIndex = 0;
+            roundAnswers = [];
+            rondaTexto.textContent = currentRound === 1 ? 'Ronda 1 (Completo)' : `Ronda ${currentRound} (Repaso)`;
+            document.getElementById('roundIndicator').textContent = `Ronda ${currentRound}`;
+            
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            answered = false;
+            
+            // Ocultar botón Siguiente y explicación
+            document.getElementById('btnNext').classList.add('hidden');
+            document.getElementById('explanationBox').classList.add('hidden');
+            document.getElementById('hintText').classList.remove('hidden');
+
+            const q = activeQueue[currentIndex];
+            
+            // Contadores
+            document.getElementById('currentQNum').textContent = currentIndex + 1;
+            document.getElementById('totalQNum').textContent = activeQueue.length;
+            document.getElementById('topicBadge').textContent = q.topic;
+            document.getElementById('questionText').textContent = q.question;
+
+            // Barra de progreso
+            const progressPercent = ((currentIndex + 1) / activeQueue.length) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+
+            // Renderizar Opciones
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+
+            const optionLetters = ['A', 'B', 'C', 'D'];
+
+            q.options.forEach((optText, index) => {
+                const optCard = document.createElement('div');
+                optCard.id = `opt-${index}`;
+                optCard.className = `option-card glass-card p-4 rounded-xl border-2 cursor-pointer flex items-center justify-between font-medium text-slate-700`;
+                optCard.onclick = () => selectAndEvaluate(index);
+
+                optCard.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span id="letter-${index}" class="w-8 h-8 rounded-lg bg-slate-100 text-mathNavy border border-slate-300 font-extrabold flex items-center justify-center text-sm transition-colors">
+                            ${optionLetters[index]}
+                        </span>
+                        <span class="text-sm sm:text-base">${optText}</span>
+                    </div>
+                    <div id="icon-${index}" class="w-6 h-6 flex items-center justify-center text-lg"></div>
+                `;
+
+                container.appendChild(optCard);
+            });
+
+            if (window.MathJax && MathJax.typesetPromise) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function selectAndEvaluate(selectedIndex) {
+            if (answered) return; // Evitar múltiples selecciones
+            answered = true;
+
+            const q = activeQueue[currentIndex];
+            const isCorrect = (selectedIndex === q.correct);
+
+            // Registrar respuesta
+            roundAnswers.push({
+                question: q,
+                userChoice: selectedIndex,
+                isCorrect: isCorrect
+            });
+
+            // Deshabilitar todas las opciones
+            const cards = document.querySelectorAll('.option-card');
+            cards.forEach(card => card.classList.add('disabled', 'cursor-default'));
+
+            // Aplicar estilos según respuesta
+            if (isCorrect) {
+                // Correcto: verde/azul
+                const selectedCard = document.getElementById(`opt-${selectedIndex}`);
+                selectedCard.className = "option-card glass-card p-4 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold flex items-center justify-between";
+                document.getElementById(`letter-${selectedIndex}`).className = "w-8 h-8 rounded-lg bg-emerald-600 text-white font-extrabold flex items-center justify-center text-sm";
+                document.getElementById(`icon-${selectedIndex}`).innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
+                
+                showExplanation(true, "¡Excelente! Respuesta Correcta", q.explanation);
+            } else {
+                // Incorrecto: Marcar elegida en rojo
+                const selectedCard = document.getElementById(`opt-${selectedIndex}`);
+                selectedCard.className = "option-card glass-card p-4 rounded-xl border-2 border-rose-500 bg-rose-50 text-rose-900 font-semibold flex items-center justify-between";
+                document.getElementById(`letter-${selectedIndex}`).className = "w-8 h-8 rounded-lg bg-rose-600 text-white font-extrabold flex items-center justify-center text-sm";
+                document.getElementById(`icon-${selectedIndex}`).innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-600"></i>';
+
+                // Resaltar la respuesta CORRECTA
+                const correctCard = document.getElementById(`opt-${q.correct}`);
+                correctCard.className = "option-card glass-card p-4 rounded-xl border-2 border-amber-500 bg-amber-50 text-amber-900 font-semibold flex items-center justify-between ring-2 ring-amber-400/50";
+                document.getElementById(`letter-${q.correct}`).className = "w-8 h-8 rounded-lg bg-amber-500 text-mathNavy font-extrabold flex items-center justify-center text-sm";
+                document.getElementById(`icon-${q.correct}`).innerHTML = '<i class="fa-solid fa-star text-amber-600"></i>';
+
+                showExplanation(false, "Respuesta Incorrecta", q.explanation);
+            }
+
+            // Mostrar botón Siguiente
+            document.getElementById('hintText').classList.add('hidden');
+            document.getElementById('btnNext').classList.remove('hidden');
+        }
+
+        function showExplanation(isCorrect, title, explanationText) {
+            const expBox = document.getElementById('explanationBox');
+            const expIcon = document.getElementById('explanationIcon');
+            const expTitle = document.getElementById('explanationTitle');
+            const expText = document.getElementById('explanationText');
+
+            expBox.classList.remove('hidden');
+
+            if (isCorrect) {
+                expBox.className = "rounded-2xl p-4 mb-5 border bg-emerald-50 border-emerald-200 text-emerald-900 transition-all duration-300";
+                expIcon.innerHTML = '<i class="fa-solid fa-lightbulb text-emerald-600"></i>';
+                expTitle.textContent = title;
+                expTitle.className = "font-extrabold text-sm uppercase mb-1 text-emerald-800";
+            } else {
+                expBox.className = "rounded-2xl p-4 mb-5 border bg-amber-50 border-amber-200 text-amber-950 transition-all duration-300";
+                expIcon.innerHTML = '<i class="fa-solid fa-circle-info text-amber-600"></i>';
+                expTitle.textContent = title + " — La respuesta correcta es la resaltada en amarillo";
+                expTitle.className = "font-extrabold text-sm uppercase mb-1 text-amber-900";
+            }
+
+            expText.innerHTML = `<strong>Explicación:</strong> ${explanationText}`;
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+
+            if (currentIndex < activeQueue.length) {
+                renderQuestion();
+            } else {
+                finishRound();
+            }
+        }
+
+        function finishRound() {
+            const wrongAnswersThisRound = roundAnswers.filter(a => !a.isCorrect);
+            const totalInRound = activeQueue.length;
+            const correctInRound = totalInRound - wrongAnswersThisRound.length;
+            
+            const percentage = Math.round((correctInRound / totalInRound) * 100);
+
+            // Guardar las falladas para la siguiente ronda
+            failedQuestions = wrongAnswersThisRound.map(a => a.question);
+
+            // Actualizar Métricas
+            document.getElementById('scoreScore').textContent = `${percentage}/100`;
+            document.getElementById('scoreCorrect').textContent = correctInRound;
+            document.getElementById('scoreWrong').textContent = wrongAnswersThisRound.length;
+            document.getElementById('scorePercent').textContent = `${percentage}%`;
+
+            const iconContainer = document.getElementById('resultIconContainer');
+            const title = document.getElementById('resultTitle');
+            const feedbackBox = document.getElementById('feedbackBox');
+            const btnRepeat = document.getElementById('btnRepeatErrors');
+            const wrongCountBtn = document.getElementById('wrongCountBtn');
+
+            if (wrongAnswersThisRound.length === 0) {
+                iconContainer.className = "w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl bg-emerald-100 text-emerald-600 border-4 border-emerald-300";
+                iconContainer.innerHTML = '<i class="fa-solid fa-trophy"></i>';
+                
+                title.textContent = "¡Dominio Total del Álgebra!";
+                feedbackBox.className = "p-4 rounded-2xl text-sm sm:text-base font-medium max-w-2xl mx-auto mb-6 bg-emerald-50 text-emerald-800 border border-emerald-200";
+                feedbackBox.innerHTML = `
+                    <p class="font-bold mb-1">🎉 ¡Felicidades! Has respondido TODAS las preguntas correctamente.</p>
+                    <p class="text-xs sm:text-sm">Has demostrado dominar completamente todos los ejercicios de la prueba.</p>
+                `;
+
+                btnRepeat.classList.add('hidden');
+            } else {
+                iconContainer.className = "w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-xl bg-amber-100 text-mathYellow border-4 border-amber-300";
+                iconContainer.innerHTML = '<i class="fa-solid fa-brain"></i>';
+
+                title.textContent = currentRound === 1 ? "¡Buen Intento!" : "¡Sigue Repasando!";
+                feedbackBox.className = "p-4 rounded-2xl text-sm sm:text-base font-medium max-w-2xl mx-auto mb-6 bg-amber-50 text-amber-900 border border-amber-200";
+                feedbackBox.innerHTML = `
+                    <p class="font-bold mb-1">Has acertado ${correctInRound} de ${totalInRound} preguntas en esta ronda.</p>
+                    <p class="text-xs sm:text-sm">Para dominar la materia al 100%, debes repasar únicamente las <strong>${wrongAnswersThisRound.length} preguntas</strong> en las que fallaste.</p>
+                `;
+
+                wrongCountBtn.textContent = wrongAnswersThisRound.length;
+                btnRepeat.classList.remove('hidden');
+            }
+
+            screenQuiz.classList.add('hidden');
+            screenResults.classList.remove('hidden');
+        }
+
+        function startRetryRound() {
+            if (failedQuestions.length === 0) return;
+
+            activeQueue = [...failedQuestions];
+            currentRound++;
+            
+            screenResults.classList.add('hidden');
+            screenQuiz.classList.remove('hidden');
+
+            setupRound();
+        }
+
+        function resetExamCompletely() {
+            screenResults.classList.add('hidden');
+            screenQuiz.classList.add('hidden');
+            badgeRonda.classList.add('hidden');
+            screenStart.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
